@@ -1,2 +1,2 @@
-# WeaterApp
+# WeatherApp
 Lets remake the wheel
