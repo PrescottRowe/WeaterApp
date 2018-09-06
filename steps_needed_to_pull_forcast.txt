@@ -1,0 +1,15 @@
+weather api
+step1:	/stations?state={CA}	#load all station from a state
+step2:	/stations/{KLAX}	#pass in the station you want links for
+	returns:	
+"properties": {
+    "stationIdentifier": "KLAX",
+    "name": "Los Angeles, Los Angeles International Airport",
+    "timeZone": "America/Los_Angeles",
+    "forecast": "https://api.weather.gov/zones/forecast/CAZ041",
+    "county": "https://api.weather.gov/zones/county/CAC037",
+    "fireWeatherZone": "https://api.weather.gov/zones/fire/CAZ241"
+  }
+step 3: pull the cordinates from one of the weather stations near KLAX,
+then enter it into the /points/{point}/forcat (enter in reversed format since its stored as x,y)
+returns:  week forcast with day/night split and includes;  date, day, temp, f/c, windspeed, wind direction, icon, forcat(rain,fog,sun,ect), deatiled forcast("Patchy fog after 11pm. Mostly cloudy, with a low around 68.")
