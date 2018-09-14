@@ -2,7 +2,7 @@
 CUI soon to be GUI 9/10/18
 Enter a US only zip code or type a city and state and get a weekly forcast of the weather.
 This program calls on the national weather service API and the Google API for geo cords. To use this you will need your own api key from google.
-Written by Fredson Laguna, Prescott Rowe, Justin _____
+Written by Fredson Laguna, Prescott Rowe, Justin Hartline
 '''
 
 import requests                         #request information from a webpage
