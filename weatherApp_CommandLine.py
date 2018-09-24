@@ -50,8 +50,8 @@ def main():
     print("\n")
 
 
-    googleKey = 'AIzaSyAqoxRyeH5P6_PWTJ5QLXr_vB6ZOQ4l8zo'
-    darkSkyKey = 'e24b4cfae5f92e22f08550af15ae507c'
+    googleKey = 'super duper key'
+    darkSkyKey = 'other super duper key'
     
     googleAPICaller = GoogleAPICaller(googleKey)
     darkSkyAPICaller = DarkSkyAPICaller(darkSkyKey) 
