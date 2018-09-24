@@ -1,0 +1,2 @@
+9.9.2018
+	Initially was used created to test Google API and national weather service API. 

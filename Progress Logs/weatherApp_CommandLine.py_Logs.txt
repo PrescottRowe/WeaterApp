@@ -1,0 +1,6 @@
+9.14.2018
+	Class was created to test the app in a command line environment and contains the "main" function.
+	imports both the Darksky and Google class to make api calls
+
+9.23.2018
+	Removed obsolete code that was used with WeatherApp.py file
