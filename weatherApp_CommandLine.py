@@ -14,7 +14,7 @@ def spider(api_request):
 
 def callLocationAPI(address):
 	googleAPI = 'https://maps.googleapis.com/maps/api/geocode/json?&address='
-	apiKey = 'AIzaSyAqoxRyeH5P6_PWTJ5QLXr_vB6ZOQ4l8zo' #required to use google API. I will be deleting this key after this project.
+	apiKey = 'somekey' #required to use google API. I will be deleting this key after this project.
 	address = "+".join(address.split(" "))	#format the address so that it can be used with googleAPI. It replaces the space char with "+"
 	googleAPI = googleAPI + address + '&key=' + apiKey
 	locationJsonData = requests.get(googleAPI).json()
