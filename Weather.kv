@@ -1,0 +1,64 @@
+#For File: GUI
+#:kivy 1.1.3
+
+ScreenManagement:
+    SearchScreen:
+    ForecastScreen:
+
+<SearchScreen>:
+    name:"start"
+    id: debugger
+    display: entry
+    Image:
+        source: "App_icons/background.jpg"
+        size: root.size
+        allow_stretch: True
+        keep_ratio: False
+    Image:
+        source: "App_icons/logo.png"
+        pos: root.center_x-(root.width/4), root.center_y+(root.height/40)
+        keep_ratio: True
+        size_hint_y: None
+        size_hint_x: None
+        width: root.width/2
+        height: self.width/self.image_ratio
+
+    FloatLayout:
+        TextInput:
+            id: entry
+            text: 'City, ST'
+            pos: root.center_x-(root.width/4), root.center_y-(root.height/40)
+            size_hint_x: None
+            size_hint_y: None
+            height: (root.height/20)
+            width: (root.width/2)
+            font_size: 16
+            multiline:False
+            on_text_validate: app.root.current="main"
+
+
+        Button:
+            text: 'Debugger '
+            on_press: debugger.debug(entry.text)
+            size_hint: None, None
+            size: (root.width/5),(root.height/40)
+
+
+
+<ForecastScreen>:
+    name:"main"
+    Image:
+        source: "App_icons/background.jpg"
+        size: root.size
+        allow_stretch: True
+        keep_ratio: False
+    Image:
+        source: "App_icons/logo.png"
+        pos: root.center_x-(root.width/4), root.center_y+(root.height/40)
+        keep_ratio: True
+        size_hint_y: None
+        size_hint_x: None
+        width: root.width/2
+        height: self.width/self.image_ratio
+
+
