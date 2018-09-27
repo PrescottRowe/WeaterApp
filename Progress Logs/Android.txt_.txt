@@ -1,0 +1,3 @@
+9/22/18
+Using a kivy emulator to quickly deploy an apk for testing. emulator: KivyLauncher
+The kivy launcher requires Andriod.txt to pass launching information and arguments. It also needs the main python file to be named main.py for testing.
