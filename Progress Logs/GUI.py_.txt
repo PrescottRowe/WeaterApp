@@ -1,0 +1,13 @@
+9/22/18
+Currently just a Screen Switching framework. When clicked on a button the screen switches to another screen
+
+9/23/18
+Created a personal logo, found free icons (with artist atrib)
+Landing screen now has an automatically adjusting background image, text field, logo, debug button.
+Formatted for portrait use. Since the widgets all float dynamically for different screen sizes and resolutions it is set to keep the
+portrait aspect ratio. Otherwise the widgets are all squished to close to each other.
+
+9/24/18 
+Added in functions to pass user input to backend. Need to read Fredsons documentation on how to accept forecast json data. Added anticipated
+libraries and functions but are all empty/unused at the moment. 
+  -note- all classes are currently in one file might split up the kv files and GUI files later on as the number of screens increases.
