@@ -12,4 +12,4 @@ step2:	/stations/{KLAX}	#pass in the station you want links for
   }
 step 3: pull the cordinates from one of the weather stations near KLAX,
 then enter it into the /points/{point}/forcat (enter in reversed format since its stored as x,y)
-returns:  week forcast with day/night split and includes;  date, day, temp, f/c, windspeed, wind direction, icon, forcat(rain,fog,sun,ect), deatiled forcast("Patchy fog after 11pm. Mostly cloudy, with a low around 68.")
+returns:  week forecast with day/night split and includes;  date, day, temp, f/c, windspeed, wind direction, icon, forecast(rain,fog,sun,ect), deatiled forecast("Patchy fog after 11pm. Mostly cloudy, with a low around 68.")
