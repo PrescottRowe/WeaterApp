@@ -1,13 +1,33 @@
-#For File: GUI
-#:kivy 1.1.3
+#:kivy 1.0
 
-ScreenManagement:
+
+ScreenManager:
+    id: screen_manager
+
     SearchScreen:
+        id: search_screen
+        name: 'SearchScreen'
+        manager: screen_manager
     ForecastScreen:
+        id: forecast_screen
+        name: 'ForecastScreen'
+        manager: screen_manager
+
+        label_location: search_screen.location
+        address: forecast_screen.address
+        cTime: forecast_screen.cTime
+        cTemp: forecast_screen.cTemp
+        cIcon: forecast_screen.cIcon
+        cSummary: forecast_screen.cSummary
+        cHumidity: forecast_screen.cHumidity
+        cUVIndex: forecast_screen.cUVIndex
+        cOzone: forecast_screen.cOzone
+        cWindSpeed: forecast_screen.cWindSpeed
+        cWindGust: forecast_screen.cWindGust
+        cVisibility: forecast_screen.cVisibility
+
 
 <SearchScreen>:
-    name:"start"
-    id: debugger
     display: entry
     Image:
         source: "App_icons/background.jpg"
@@ -26,7 +46,7 @@ ScreenManagement:
     FloatLayout:
         TextInput:
             id: entry
-            text: 'City, ST'
+            text: '92069'
             pos: root.center_x-(root.width/4), root.center_y-(root.height/40)
             size_hint_x: None
             size_hint_y: None
@@ -34,31 +54,135 @@ ScreenManagement:
             width: (root.width/2)
             font_size: 16
             multiline:False
-            on_text_validate: app.root.current="main"
-
-
-        Button:
-            text: 'Debugger '
-            on_press: debugger.debug(entry.text)
-            size_hint: None, None
-            size: (root.width/5),(root.height/40)
-
+            on_text_validate:
+                root.set_location(entry.text)
 
 
 <ForecastScreen>:
-    name:"main"
+    on_enter:
+        root.get_data()
     Image:
-        source: "App_icons/background.jpg"
-        size: root.size
+        source: "App_icons/clear-sky.jpg"
         allow_stretch: True
         keep_ratio: False
-    Image:
-        source: "App_icons/logo.png"
-        pos: root.center_x-(root.width/4), root.center_y+(root.height/40)
-        keep_ratio: True
-        size_hint_y: None
-        size_hint_x: None
-        width: root.width/2
-        height: self.width/self.image_ratio
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: root.address
+                text_size: self.text_size
+                halign: 'center'
+            Label:
+                text: root.cTime
+                text_size: self.text_size
+                halign: 'center'
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Image:
+                        source: "App_icons/%s.png" % root.cIcon
+                        allow_stretch: True
+                        keep_ratio: True
+                    Label:
+                        text: root.cTemp
+                        text_size: self.text_size
+                        halign: 'center'
+            Label:
+                text: root.cSummary
+                text_size: self.text_size
+                halign: 'center'
 
 
+
+        GridLayout:
+            cols: 2
+            rows: 2
+
+            Button:
+                text: "Humidity\n%s" % root.cHumidity
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Ozone  %s\nUV Index  %s" % (root.cOzone, root.cUVIndex)
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Wind Speed  %s\nWind Gust  %s" % (root.cWindSpeed, root.cWindGust)
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Visibility\n%s" % root.cVisibility
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
+            Button:
+                text: "Day:"
+                background_color: (0,0,0,.1)
+                on_press:
+                    self.background_color= (0,0,0,.2)
+                on_release:
+                    self.background_color= (0,0,0,.1)
