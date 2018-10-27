@@ -1,0 +1,9 @@
+10/20 to 10/27
+Python-for-android: is a packaging CUI program that takes python and kivy code and packs it into an apk.
+Buildozer: is a wrapper program that takes an argument file and based off of the arguments runs the mapped commands through to python-for-
+android to help speed up the build process.
+  ~To get all of this to work with our code we had to match the kivy version and cython version. The pair i went with was 1.9.1 kivy and 23.1 cython
+    The file that contains main must be labled main.py. All kv files must be lowercase and include kivy versioning. The main.py file must contain
+    version info matching the regular expression in the spec file. The apk was also packed with the request, openssl, and kivy librarys.
+    The android does not like the current dynamic weather icons in the kv file so a default place holder needs to be added instead of leaving it empty durring load.
+    There cannot be unicode characters only ascii so when we use the deg symbol for temp it needs to be the ascii one. 
