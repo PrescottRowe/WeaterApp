@@ -5,8 +5,8 @@ from forecast import Forecast
 def main():
     #googleKey = 'super duper key'
     #darkSkyKey = 'other super duper key'
-    googleKey = 'AIzaSyDnrksI1MI9U9bKXZNsozDvpMdUHf6L1Vo'
-    darkSkyKey = 'ac98d38221e43206bfb54ac1d694421b'
+    googleKey = 'key'
+    darkSkyKey = 'key'
     googleAPICaller = GoogleAPICaller(googleKey)
     darkSkyAPICaller = DarkSkyAPICaller(darkSkyKey)     
 
