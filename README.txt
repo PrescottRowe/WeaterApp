@@ -17,6 +17,7 @@ notable changes since last version:
 +logo splash screen
 
 Upcoming changes:
+-grey scale background image for easier readablility of text
 -show units
 -high and low temps
 -C or F option that is linked to unit types
