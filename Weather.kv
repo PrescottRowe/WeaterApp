@@ -1,4 +1,5 @@
-#:kivy 1.0
+#:kivy 1.9.1
+#:import kivy kivy
 
 
 ScreenManager:
@@ -26,55 +27,109 @@ ScreenManager:
         cWindGust: forecast_screen.cWindGust
         cVisibility: forecast_screen.cVisibility
 
+        dTime0: forecast_screen.dTime0
+        dIcon0: forecast_screen.dIcon0
+        dTempHi0: forecast_screen.dTempHi0
+        dTempLo0: forecast_screen.dTempLo0
+        dTime1: forecast_screen.dTime1
+        dIcon1: forecast_screen.dIcon1
+        dTempHi1: forecast_screen.dTempHi1
+        dTempLo1: forecast_screen.dTempLo1
+        dTime2: forecast_screen.dTime2
+        dIcon2: forecast_screen.dIcon2
+        dTempHi2: forecast_screen.dTempHi2
+        dTempLo2: forecast_screen.dTempLo2
+        dTime3: forecast_screen.dTime3
+        dIcon3: forecast_screen.dIcon3
+        dTempHi3: forecast_screen.dTempHi3
+        dTempLo3: forecast_screen.dTempLo3
+        dTime4: forecast_screen.dTime4
+        dIcon4: forecast_screen.dIcon4
+        dTempHi4: forecast_screen.dTempHi4
+        dTempLo4: forecast_screen.dTempLo4
+        dTime5: forecast_screen.dTime5
+        dIcon5: forecast_screen.dIcon5
+        dTempHi5: forecast_screen.dTempHi5
+        dTempLo5: forecast_screen.dTempLo5
+        dTime6: forecast_screen.dTime6
+        dIcon6: forecast_screen.dIcon6
+        dTempHi6: forecast_screen.dTempHi6
+        dTempLo6: forecast_screen.dTempLo6
+
 
 <SearchScreen>:
     display: entry
     Image:
-        source: "App_icons/background.jpg"
+        source: "data/background2.jpg"
         size: root.size
         allow_stretch: True
         keep_ratio: False
     Image:
-        source: "App_icons/logo.png"
+        source: "data/logo.png"
         pos: root.center_x-(root.width/4), root.center_y+(root.height/40)
         keep_ratio: True
         size_hint_y: None
         size_hint_x: None
         width: root.width/2
-        height: self.width/self.image_ratio
+        height: self.width/2
 
     FloatLayout:
         TextInput:
             id: entry
-            text: '92069'
+            text: 'San Marcos, CA'
             pos: root.center_x-(root.width/4), root.center_y-(root.height/40)
             size_hint_x: None
             size_hint_y: None
             height: (root.height/20)
             width: (root.width/2)
-            font_size: 16
             multiline:False
             on_text_validate:
                 root.set_location(entry.text)
+        Button:
+            text: "Get Weather"
+            pos: root.center_x-(self.width/2), root.center_y-(root.height/10)
+            size_hint_x: None
+            size_hint_y: None
+            height: (root.height/20)
+            width: (root.width/3)
+            on_release:
+                root.set_location(entry.text)
+
+
 
 
 <ForecastScreen>:
     on_enter:
         root.get_data()
     Image:
-        source: "App_icons/clear-sky.jpg"
+        source: "data/background2.jpg"
         allow_stretch: True
         keep_ratio: False
 
     BoxLayout:
         orientation: 'vertical'
+        ActionBar:
+            pos_hint: {'top':1}
+            ActionView:
+                use_separator: True
+                ActionPrevious:
+                    title: root.address
+                    with_previous: False
+                    app_icon: 'data/icon.png'
+                ActionOverflow:
+                ActionButton:
+                    important:True
+                    icon: 'data/search.png'
+                    on_press:
+                        root.manager.current="SearchScreen"
+                        root.manager.transition.direction = 'right'
 
+                ActionGroup:
+                    ActionButton:
+                        text: 'History'
         BoxLayout:
             orientation: 'vertical'
-            Label:
-                text: root.address
-                text_size: self.text_size
-                halign: 'center'
+
             Label:
                 text: root.cTime
                 text_size: self.text_size
@@ -86,12 +141,13 @@ ScreenManager:
                 BoxLayout:
                     orientation: 'horizontal'
                     Image:
-                        source: "App_icons/%s.png" % root.cIcon
+                        source: "data/%s.png" % root.cIcon
                         allow_stretch: True
                         keep_ratio: True
                     Label:
-                        text: root.cTemp
-                        text_size: self.text_size
+                        text: "[b]%sºF[/b]" % root.cTemp
+                        markup: True
+                        font_size:'30sp'
                         halign: 'center'
             Label:
                 text: root.cSummary
@@ -105,84 +161,213 @@ ScreenManager:
             rows: 2
 
             Button:
-                text: "Humidity\n%s" % root.cHumidity
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+
+                text: "Humidity:\n\n[size=20sp]%s%%[/size]" % root.cHumidity
+                markup:True
+                text_size: self.size
+                halign: 'right'
+                valign: 'top'
+                padding_x: 20
+                padding_y: 10
+                Image:
+                    source: "data/humidity.png"
+                    pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
+
+
             Button:
-                text: "Ozone  %s\nUV Index  %s" % (root.cOzone, root.cUVIndex)
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+
+                text: "UV Index:\n\n[size=20sp]%s[/size]" % root.cUVIndex
+                markup:True
+                text_size: self.size
+                halign: 'right'
+                valign: 'top'
+                padding_x: 20
+                padding_y: 10
+                Image:
+                    source: "data/uv-index.png"
+                    pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
+
             Button:
-                text: "Wind Speed  %s\nWind Gust  %s" % (root.cWindSpeed, root.cWindGust)
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                text: "Speed:\n\n[size=20sp]%s mph[/size]" % (root.cWindSpeed)
+                markup:True
+                text_size: self.size
+                halign: 'right'
+                valign: 'top'
+                padding_x: 20
+                padding_y: 10
+                Image:
+                    source: "data/wind.png"
+                    pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
+
             Button:
-                text: "Visibility\n%s" % root.cVisibility
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                text: 'Visibility:\n\n[size=20sp]%s[/size]' % root.cVisibility
+                markup:True
+                text_size: self.size
+                halign: 'right'
+                valign: 'top'
+                padding_x: 20
+                padding_y: 10
+                Image:
+                    source: "data/visibility.png"
+                    pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
 
         BoxLayout:
             orientation: 'horizontal'
 
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime0, root.dTempHi0, root.dTempLo0)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon0
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
 
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime1, root.dTempHi1, root.dTempLo1)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon1
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime2, root.dTempHi2, root.dTempLo2)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon2
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime3, root.dTempHi3, root.dTempLo3)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon3
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime4, root.dTempHi4, root.dTempLo4)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon4
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
             Button:
-                text: "Day:"
+                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime5, root.dTempHi5, root.dTempLo5)
+                markup:True
+                text_size: self.size
+                outline_color:(1,0,1)
+                outline_width:5
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon5
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
             Button:
-                text: "Day:"
+                text: '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime6, root.dTempHi6, root.dTempLo6)
+                markup:True
+                text_size: self.size
+                halign: 'center'
+                valign: 'top'
+                padding_y: 15
+
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
                 on_release:
                     self.background_color= (0,0,0,.1)
+                Image:
+                    source: "data/%s.png" % root.dIcon6
+                    pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
+                    height: self.parent.height-self.parent.height/3
+                    width: self.parent.width/2
