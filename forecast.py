@@ -1,17 +1,15 @@
+import json
 class Forecast:
     def __init__(self, forecastJsonData, formattedAddress):
-        self._timezone = forecastJsonData['timezone']              # (eg: America/New York)
+        self._timezone = forecastJsonData['timezone']  # (eg: America/New York)
         self._latitude = forecastJsonData['latitude']
         self._longitude = forecastJsonData['longitude']
         self._formattedAddress = formattedAddress
-        
         self._fCurrent = Forecast_Currently(forecastJsonData)
         self._fMinutely = Forecast_Minutely(forecastJsonData)
         self._fHourly = Forecast_Hourly(forecastJsonData)
         self._fDaily = Forecast_Daily(forecastJsonData)
-
         self._fAlerts = Alerts(forecastJsonData)
-
     @property
     def timezone(self):
         return self._timezone
@@ -24,15 +22,13 @@ class Forecast:
     @property
     def address(self):
         return self._formattedAddress
-
-
-    #***** The below properties are used for retrieving data from the class "Forecast_Currently" *****#
+    # ***** The below properties are used for retrieving data from the class "Forecast_Currently" *****#
     @property
     def cTime(self):
-        return self._fCurrent._time # returns the unix time, refer to http://strftime.org/ for converting from unix time to human readable time
+        return self._fCurrent._time  # returns the unix time, refer to http://strftime.org/ for converting from unix time to human readable time
     @property
     def cSummary(self):
-        return self._fCurrent._summary        
+        return self._fCurrent._summary
     @property
     def cIcon(self):
         return self._fCurrent._icon
@@ -75,9 +71,7 @@ class Forecast:
     @property
     def cOzone(self):
         return self._fCurrent._ozone
-    
-
-    #***** The below properties are used for retrieving data from the class "Forecast_Minutely" *****#
+    # ***** The below properties are used for retrieving data from the class "Forecast_Minutely" *****#
     @property
     def mSummary(self):
         return self._fMinutely._summary
@@ -86,10 +80,8 @@ class Forecast:
         return self._fMinutely._icon
     @property
     def mList(self):
-        return self._fMinutely._minutelyList # returns the list of minute-by-minute forecasts
-    
-
-    #***** The below properties are used for retrieving data from the class "Forecast_Hourly" *****#
+        return self._fMinutely._minutelyList  # returns the list of minute-by-minute forecasts
+    # ***** The below properties are used for retrieving data from the class "Forecast_Hourly" *****#
     @property
     def hSummary(self):
         return self._fHourly._summary
@@ -97,8 +89,7 @@ class Forecast:
         return self._fHourly._icon
     def hList(self):
         return self._fHourly._hourlyList
-
-    #***** The below properties are used for retrieving data from the class "Forecast_Daily" *****#
+    # ***** The below properties are used for retrieving data from the class "Forecast_Daily" *****#
     @property
     def dSummary(self):
         return self._fDaily._summary
@@ -106,31 +97,32 @@ class Forecast:
         return self._fDaily._icon
     def dList(self):
         return self._fDaily._dailyList
-    
 
 
 # class that contains current/in the moment weather conditions
 class Forecast_Currently:
     def __init__(self, forecastJsonData):
         c = forecastJsonData['currently']
-        self._time = c['time']        			# unix time
-        self._summary = c['summary']   			# e.g. "Mostly Cloudy"
-        self._icon = c['icon']      			# icon for the weather
-        self._temperature = c['temperature']          	# average temperature
-        self._apparentTemperature = c['apparentTemperature']  	# what the temperature feels like
-        self._dewPoint = c['dewPoint']                  # the dew point in degrees Fahrenheit.
+        self._time = c['time']  # unix time
+        self._summary = c['summary']  # e.g. "Mostly Cloudy"
+        self._icon = c['icon']  # icon for the weather
+        self._temperature = c['temperature']  # average temperature
+        self._apparentTemperature = c['apparentTemperature']  # what the temperature feels like
+        self._dewPoint = c['dewPoint']  # the dew point in degrees Fahrenheit.
         self._humidity = c['humidity']
-        self._pressure = c['pressure']                  # the sea-level air pressure in millibars.
-        self._windSpeed = c['windSpeed']                #The wind speed in miles per hour.
-        self._windGust = c.get('windGust', '')          #The wind gust speed in miles per hour.
+        self._pressure = c['pressure']  # the sea-level air pressure in millibars.
+        self._windSpeed = c['windSpeed']  # The wind speed in miles per hour.
+        self._windGust = c.get('windGust', '')  # The wind gust speed in miles per hour.
         self._windBearing = c.get('windBearing', '')
-        self._nearestStormBearing = c.get('nearestStormBearing', '')    #The approximate direction of the nearest storm in degrees, with true north at 0° and progressing clockwise. (If nearestStormDistance is zero, then this value will not be defined.)
-        self._nearestStormDistance = c.get('nearestStormDistance', '')  #The approximate distance to the nearest storm in miles. (A storm distance of 0 doesn’t necessarily refer to a storm at the requested location, but rather a storm in the vicinity of that location.)
+        self._nearestStormBearing = c.get('nearestStormBearing',
+                                          '')  # The approximate direction of the nearest storm in degrees, with true north at 0 and progressing clockwise. (If nearestStormDistance is zero, then this value will not be defined.)
+        self._nearestStormDistance = c.get('nearestStormDistance',
+                                           '')
         self._uvIndex = c['uvIndex']
-        self._visibility = c['visibility']              # the average visibility in miles, capped at 10 mile
-        self._ozone = c['ozone']                        # the columnar density of total atmospheric ozone at the given time in Dobson units.
-        
-        
+        self._visibility = c['visibility']  # the average visibility in miles, capped at 10 mile
+        self._ozone = c['ozone']  # the columnar density of total atmospheric ozone at the given time in Dobson units.
+
+
 # class that contains 61 minutely forecasts for the next hour within a list
 # I've noticed that the minutely forecast data is only present during rainy weather. It is often not present on the darksky site
 class Forecast_Minutely:
@@ -139,15 +131,16 @@ class Forecast_Minutely:
             m = forecastJsonData['minutely']
             self._summary = m['summary']
             self._icon = m['icon']
-            self._minutelyList = list()         # list that will store instances of class Minutely, there should be 61 minutely forecasts stored
+            self._minutelyList = list()  # list that will store instances of class Minutely, there should be 61 minutely forecasts stored
             for data in m['data']:
-                self._minutelyList.append(Minutely(data['time'], data.get('precipIntensity', ''), data.get('precipProbability', ''), data.get('precipIntensityError', ''), data.get('precipType', '') ))
-            
-        
+                self._minutelyList.append(
+                    Minutely(data['time'], data.get('precipIntensity', ''), data.get('precipProbability', ''),
+                             data.get('precipIntensityError', ''), data.get('precipType', '')))
 
-# contains by-the-minute forecast 
+
+# contains by-the-minute forecast
 class Minutely:
-    def __init__(self, time, precipIntensity, precipProbability, precipIntensityError,  precipType):
+    def __init__(self, time, precipIntensity, precipProbability, precipIntensityError, precipType):
         self._time = time
         self._precipIntensity = precipIntensity
         self._precipProbability = precipProbability
@@ -157,18 +150,21 @@ class Minutely:
     @property
     def time(self):
         return self._time
+
     @property
     def precipIntensity(self):
         return self._precipIntensity
+
     @property
     def precipIntensityError(self):
         return self._precipIntensityError
+
     @property
     def precipType(self):
         return self._precipType
-            
 
-#contains by-the-hour forecast for the next two days within a list
+
+# contains by-the-hour forecast for the next two days within a list
 class Forecast_Hourly:
     def __init__(self, forecastJsonData):
         h = forecastJsonData['hourly']
@@ -176,11 +172,19 @@ class Forecast_Hourly:
         self._icon = h['icon']
         self._hourlyList = list()
         for data in h['data']:
-            self._hourlyList.append(Hourly(data['time'], data['summary'], data['icon'], data.get('precipIntensity', ''), data.get('precipProbability', ''), data['temperature'], data['apparentTemperature'], data['dewPoint'], data['humidity'], data['pressure'], data['windSpeed'], data['windGust'], data.get('windBearing', ''), data['cloudCover'], data['uvIndex'], data['visibility'], data['ozone'] ))
+            self._hourlyList.append(Hourly(data['time'], data['summary'], data['icon'], data.get('precipIntensity', ''),
+                                           data.get('precipProbability', ''), data['temperature'],
+                                           data['apparentTemperature'], data['dewPoint'], data['humidity'],
+                                           data['pressure'], data['windSpeed'], data['windGust'],
+                                           data.get('windBearing', ''), data['cloudCover'], data['uvIndex'],
+                                           data['visibility'], data['ozone']))
 
-#contains by-the-hour forecast
+
+# contains by-the-hour forecast
 class Hourly:
-    def __init__(self, time, summary, icon, precipIntensity, precipProbability, temperature, apparentTemperature, dewPoint, humidity, pressure, windSpeed, windGust, windBearing, cloudCover, uvIndex, visibility, ozone):
+    def __init__(self, time, summary, icon, precipIntensity, precipProbability, temperature, apparentTemperature,
+                 dewPoint, humidity, pressure, windSpeed, windGust, windBearing, cloudCover, uvIndex, visibility,
+                 ozone):
         self._time = time
         self._summary = summary
         self._icon = icon
@@ -201,67 +205,98 @@ class Hourly:
 
     @property
     def time(self):
-        return _time
+        return self._time
+
     @property
     def summary(self):
-        return _summary
+        return self._summary
+
     @property
     def icon(self):
-        return _icon
+        return self._icon
+
     @property
     def precipIntensity(self):
-        return _precipIntensity
+        return self._precipIntensity
+
     @property
     def precipProbability(self):
-        return _precipProbability
+        return self._precipProbability
+
     @property
     def temperature(self):
-        return _temperature
+        return self._temperature
+
     @property
     def apparentTemperature(self):
-        return _apparentTemperature
+        return self._apparentTemperature
+
     @property
     def dewPoint(self):
-        return _dewPoint
+        return self._dewPoint
+
     @property
     def humidity(self):
-        return _humidity
+        return self._humidity
+
     @property
     def pressure(self):
-        return _pressure
+        return self._pressure
+
     @property
     def windSpeed(self):
-        return _windSpeed
+        return self._windSpeed
+
     @property
     def windGust(self):
-        return _windGust
+        return self._windGust
+
     @property
     def windBearing(self):
-        return _windBearing
+        return self._windBearing
+
     @property
     def cloudCover(self):
-        return _cloudCover
+        return self._cloudCover
+
     @property
     def uvIndex(self):
-        return _uvIndex
+        return self._uvIndex
+
     @property
     def visibility(self):
-        return _visibility
+        return self._visibility
+
     @property
     def ozone(self):
-        return _ozone        
+        return self._ozone
 
-class Forecast_Daily:
+
+class Forecast_Daily: #create a list of daily objects
     def __init__(self, forecastJsonData):
         d = forecastJsonData['daily']
         self._summary = d['summary']
         self._icon = d['icon']
         self._dailyList = list()
         for data in d['data']:
-            self._dailyList.append( Daily(data['time'], data['summary'], data['icon'], data['sunriseTime'], data['sunsetTime'], data['moonPhase'], data.get('precipIntensity',''), data.get('precipIntensityMax',''), data.get('precipIntensityMaxTime',''), data.get('precipProbability',''), data.get('precipType',''), data['temperatureHigh'], data['temperatureHighTime'], data['temperatureLow'], data['temperatureLowTime'], data['apparentTemperatureHigh'], data['apparentTemperatureHighTime'], data['apparentTemperatureLow'], data['apparentTemperatureLowTime'], data['dewPoint'], data['humidity'], data['pressure'], data['windSpeed'], data['windGust'], data['windGustTime'], data.get('windBearing',''), data['cloudCover'], data['uvIndex'], data['uvIndexTime'], data['visibility'], data['ozone'] ))
+            self._dailyList.append(
+                Daily(data['time'], data['summary'], data['icon'], data['sunriseTime'], data['sunsetTime'],
+                      data['moonPhase'], data.get('precipIntensity', ''), data.get('precipIntensityMax', ''),
+                      data.get('precipIntensityMaxTime', ''), data.get('precipProbability', ''),
+                      data.get('precipType', ''), data['temperatureHigh'], data['temperatureHighTime'],
+                      data['temperatureLow'], data['temperatureLowTime'], data['apparentTemperatureHigh'],
+                      data['apparentTemperatureHighTime'], data['apparentTemperatureLow'],
+                      data['apparentTemperatureLowTime'], data['dewPoint'], data['humidity'], data['pressure'],
+                      data['windSpeed'], data['windGust'], data['windGustTime'], data.get('windBearing', ''),
+                      data['cloudCover'], data['uvIndex'], data['uvIndexTime'], data['visibility'], data['ozone']))
 
-class Daily:
-    def __init__(self,time,summary,icon,sunriseTime,sunsetTime,moonPhase,precipIntensity,precipIntensityMax,precipIntensityMaxTime,precipProbability,precipType,temperatureHigh,temperatureHighTime,temperatureLow,temperatureLowTime,apparentTemperatureHigh,apparentTemperatureHighTime,apparentTemperatureLow,apparentTemperatureLowTime,dewPoint,humidity,pressure,windSpeed,windGust,windGustTime,windBearing,cloudCover,uvIndex,uvIndexTime,visibility,ozone):
+
+class Daily: #setter
+    def __init__(self, time, summary, icon, sunriseTime, sunsetTime, moonPhase, precipIntensity, precipIntensityMax,
+                 precipIntensityMaxTime, precipProbability, precipType, temperatureHigh, temperatureHighTime,
+                 temperatureLow, temperatureLowTime, apparentTemperatureHigh, apparentTemperatureHighTime,
+                 apparentTemperatureLow, apparentTemperatureLowTime, dewPoint, humidity, pressure, windSpeed, windGust,
+                 windGustTime, windBearing, cloudCover, uvIndex, uvIndexTime, visibility, ozone):
         self._time = time
         self._summary = summary
         self._icon = icon
@@ -296,108 +331,136 @@ class Daily:
 
     @property
     def time(self):
-        return _time
+        return self._time
+
     @property
     def summary(self):
-        return _summary
+        return self._summary
+
     @property
     def icon(self):
-        return _icon
+        return self._icon
+
     @property
     def sunriseTime(self):
-        return _sunriseTime
+        return self._sunriseTime
+
     @property
     def sunsetTime(self):
-        return _sunsetTime
+        return self._sunsetTime
+
     @property
     def moonPhase(self):
-        return _moonPhase
+        return self._moonPhase
+
     @property
     def precipIntensity(self):
-        return _precipIntensity
+        return self._precipIntensity
+
     @property
     def precipIntensityMax(self):
-        return _precipIntensityMax
+        return self._precipIntensityMax
+
     @property
     def precipIntensityMaxTime(self):
-        return _precipIntensityMaxTime
+        return self._precipIntensityMaxTime
+
     @property
     def precipProbability(self):
-        return _precipProbability
+        return self._precipProbability
+
     @property
     def precipType(self):
-        return _precipType
+        return self._precipType
+
     @property
     def temperatureHigh(self):
-        return _temperatureHigh
+        return self._temperatureHigh
+
     @property
     def temperatureHighTime(self):
-        return _temperatureHighTime
+        return self._temperatureHighTime
+
     @property
     def temperatureLow(self):
-        return _temperatureLow
+        return self._temperatureLow
+
     @property
     def temperatureLowTime(self):
-        return _temperatureLowTime
+        return self._temperatureLowTime
+
     @property
     def apparentTemperatureHigh(self):
-        return _apparentTemperatureHigh
+        return self._apparentTemperatureHigh
+
     @property
     def apparentTemperatureHighTime(self):
-        return _apparentTemperatureHighTime
+        return self._apparentTemperatureHighTime
+
     @property
     def apparentTemperatureLow(self):
-        return _apparentTemperatureLow
+        return self._apparentTemperatureLow
+
     @property
     def apparentTemperatureLowTime(self):
-        return _apparentTemperatureLowTime
+        return self._apparentTemperatureLowTime
+
     @property
     def dewPoint(self):
-        return _dewPoint
+        return self._dewPoint
+
     @property
     def humidity(self):
-        return _humidity
+        return self._humidity
+
     @property
     def pressure(self):
-        return _pressure
+        return self._pressure
+
     @property
     def windSpeed(self):
-        return _windSpeed
+        return self._windSpeed
+
     @property
     def windGust(self):
-        return _windGust
+        return self._windGust
+
     @property
     def windGustTime(self):
-        return _windGustTime
+        return self._windGustTime
+
     @property
     def windBearing(self):
-        return _windBearing
+        return self._windBearing
+
     @property
     def cloudCover(self):
-        return _cloudCover
+        return self._cloudCover
+
     @property
     def uvIndex(self):
-        return _uvIndex
+        return self._uvIndex
+
     @property
     def uvIndexTime(self):
-        return _uvIndexTime
+        return self._uvIndexTime
+
     @property
     def visibility(self):
-        return _visibility
+        return self._visibility
+
     @property
     def ozone(self):
-        return _ozone
-        
+        return self._ozone
+
 
 class Alerts:
     def __init__(self, forecastJsonData):
         if 'alerts' in forecastJsonData:
             a = forecastJsonData['alerts'][0]
             self._title = a.get('title', '')
-            self._time = a.get('time','')
-            self._expires = a.get('expires','')
-            self._description = a.get('description','')
-            self._uri = a.get('uri','')
+            self._time = a.get('time', '')
+            self._expires = a.get('expires', '')
+            self._description = a.get('description', '')
+            self._uri = a.get('uri', '')
 
-        
-                 
