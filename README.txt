@@ -6,7 +6,7 @@ Most of the gui is there, still need to add backend to make all of the buttons w
 notable changes since last version:
 
 
-+truncate the float numbers
++truncated the float numbers
 +fixed icon spacing for different sized screens
 +android back button and home button both work now
 +added a menu bar,search,history button
@@ -26,7 +26,10 @@ notable changes since last version:
 Upcoming changes:
 -click C or F option that is linked to unit types
 -save history, dropdown list and link
--side scrolling
+-have offline storage
+-side scrolling for weekly forcast
+-click a day to view it
 -default load icons
 -search suggestions
 -set data to load before pictures to speed up total load
+-currently android keyboard selections append but should replace
