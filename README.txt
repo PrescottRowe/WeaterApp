@@ -13,18 +13,20 @@ notable changes since last version:
 +search screen button along with search on_enter
 +more py3->py2 errors fixed and found
 +unix time is now readable
-+text markup
++more text markup
 +logo splash screen
++better screen transitions
++search button
++tinted background image for easier readablility of text
++shows units
++high and low temps
++Visibility and Uv index are now phrases(high,low, etc) instead of 1-10 integers
++Day forecast summary is now a phrase rather than a word
 
 Upcoming changes:
--grey scale background image for easier readablility of text
--show units
--high and low temps
--C or F option that is linked to unit types
--more text markup
--save history
--bind menu buttons
--weekly forecast as a scroll wheel
+-click C or F option that is linked to unit types
+-save history, dropdown list and link
+-side scrolling
 -default load icons
 -search suggestions
 -set data to load before pictures to speed up total load
