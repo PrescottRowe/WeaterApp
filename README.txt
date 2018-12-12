@@ -1,5 +1,5 @@
 # WeatherApp
-11/15/18
+12/12/18
 API's : Google(to get location cordinates based off of zip/city), Darksky(to get forecast data worldwide)
 
 Most of the gui is there, still need to add backend to make all of the buttons work along with various text markup changes.
@@ -22,14 +22,16 @@ notable changes since last version:
 +high and low temps
 +Visibility and Uv index are now phrases(high,low, etc) instead of 1-10 integers
 +Day forecast summary is now a phrase rather than a word
++save history, dropdown list and link
++have offline storage
++click a day to view it
++default load icons
++search suggestions
++set data to load before pictures to speed up total load
++currently android keyboard selections append but should replace
 
 Upcoming changes:
 -click C or F option that is linked to unit types
--save history, dropdown list and link
--have offline storage
 -side scrolling for weekly forcast
--click a day to view it
--default load icons
--search suggestions
--set data to load before pictures to speed up total load
--currently android keyboard selections append but should replace
+-android keyboard selections are still a little blocky in nature
+
