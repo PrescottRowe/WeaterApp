@@ -243,8 +243,8 @@ class SearchScreen(Screen):
         sm.transition.direction = 'left'
 
 
-googleKey = 'AIzaSyAO-zV0XBi8hM0pnAtLDdoSVtmhWrl8JWM'
-darkSkyKey = '4a05668b390431d4f52a20934a3f67ac'
+googleKey = 'key goes here'
+darkSkyKey = 'key goes here'
 googleAPICaller = GoogleAPICaller(googleKey)
 darkSkyAPICaller = DarkSkyAPICaller(darkSkyKey)
 sm=Builder.load_file('weather.kv')
