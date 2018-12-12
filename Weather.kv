@@ -3,17 +3,23 @@
 
 
 ScreenManager:
+    #screen manager is the linker between the kv file and the py file
     id: screen_manager
 
     SearchScreen:
+        #ids and names are used to reference the screens
         id: search_screen
         name: 'SearchScreen'
         manager: screen_manager
+        #only one screen manager will be used
+
     ForecastScreen:
         id: forecast_screen
         name: 'ForecastScreen'
         manager: screen_manager
 
+        #linking all of the variable names. In the KV langauge everything has to go
+        #through the manager and the names are like ports to reference the path data takes
         label_location: search_screen.location
         address: forecast_screen.address
         cTime: forecast_screen.cTime
@@ -59,79 +65,102 @@ ScreenManager:
 
 <SearchScreen>:
     display: entry
+
     Image:
+        #The apps background
         source: "data/background2.jpg"
         size: root.size
         allow_stretch: True
         keep_ratio: False
+
     Image:
+        #The airplain image on the search screen
+        #All images use screen size to edit position and size
         source: "data/logo.png"
-        pos: root.center_x-(root.width/4), root.center_y+(root.height/40)
+        pos: root.center_x-(root.width/2), root.center_y-(root.center_y/2)
         keep_ratio: True
-        size_hint_y: None
-        size_hint_x: None
+        height: root.height-self.parent.height/3
         width: root.width/2
-        height: self.width/2
 
     FloatLayout:
+    #Float layouts mean that the items need to be manualy told where to go
         TextInput:
             id: entry
-            text: 'San Marcos, CA'
+            text: '' #text for the search
             pos: root.center_x-(root.width/4), root.center_y-(root.height/40)
             size_hint_x: None
             size_hint_y: None
             height: (root.height/20)
             width: (root.width/2)
+            #No multiline means that user can hit enter to search
             multiline:False
+            #does not allow keyboard to suggest what to type this was to help
+            #remove a bug where text was being appended
+            keyboard_suggestions:False
+            on_touch_up:
+                #when text field is clicked and released it opens creates a drop down for search suggesions
+                root.drop_down.open(self)
+            on_text:
+                #used to update the screen everytime a new letter is typed
+                root.predict_location(entry.text+' ')
             on_text_validate:
-                root.set_location(entry.text)
-        Button:
-            text: "Get Weather"
-            pos: root.center_x-(self.width/2), root.center_y-(root.height/10)
-            size_hint_x: None
-            size_hint_y: None
-            height: (root.height/20)
-            width: (root.width/3)
-            on_release:
-                root.set_location(entry.text)
-
-
+                #when the user hits enter it will search and remove the widget tree
+                root.set_location(entry.text+' ')
+                root.drop_down.clear_widgets()
 
 
 <ForecastScreen>:
     on_enter:
-        root.get_data()
+        #when the screen changes it is set to trigger these two functions
+        root.set_data()
+        root.get_data(root.address)
+
     Image:
+        #same background image but must be specified for every screen
         source: "data/background2.jpg"
         allow_stretch: True
         keep_ratio: False
 
-    BoxLayout:
-        orientation: 'vertical'
+    BoxLayout:#a box frame work for widgets to fit inside of
+        orientation: 'vertical'#adds boxes virtically
+
+        #action bar is just a menu at the top of the screen
         ActionBar:
-            pos_hint: {'top':1}
+            pos_hint: {'top':1}#at top of screen and full width
             ActionView:
-                use_separator: True
+                use_separator: True #a nice bar to seperate buttons
                 ActionPrevious:
                     title: root.address
                     with_previous: False
+                    #app logo
                     app_icon: 'data/icon.png'
                 ActionOverflow:
+                    #left to make future button additions easier
                 ActionButton:
+                    #wont let button fall off into a drop down
                     important:True
                     icon: 'data/search.png'
                     on_press:
+                        #when pressed goes back to the search screen for more searches
                         root.manager.current="SearchScreen"
                         root.manager.transition.direction = 'right'
-
                 ActionGroup:
                     ActionButton:
+                        id: history_button
                         text: 'History'
+                        width: root.width/2
+                        on_release: root.drop_down.open(self)
+                        on_touch_move:
+                            #all of the json entries can be cleared with a swipe
+                            root.wipe_data()
+                            root.drop_down.clear_widgets()
+
+
         BoxLayout:
             orientation: 'vertical'
-
+            #This is where data presentation starts
             Label:
-                text: root.cTime
+                text: str(root.cTime)
                 text_size: self.text_size
                 halign: 'center'
 
@@ -140,34 +169,33 @@ ScreenManager:
 
                 BoxLayout:
                     orientation: 'horizontal'
+
                     Image:
-                        source: "data/%s.png" % root.cIcon
+                        source: "data/%s.png" % str(root.cIcon)
                         allow_stretch: True
                         keep_ratio: True
+
                     Label:
-                        text: "[b]%sºF[/b]" % root.cTemp
+                        text: "[b]%sºF[/b]" % str(root.cTemp)
                         markup: True
-                        font_size:'30sp'
+                        font_size:'30sp' #sp considers resolution
                         halign: 'center'
             Label:
-                text: root.cSummary
+                text: str(root.cSummary)
                 text_size: self.text_size
                 halign: 'center'
 
 
 
         GridLayout:
+        # for current day stats
             cols: 2
             rows: 2
 
             Button:
                 background_color: (0,0,0,.1)
-                on_press:
-                    self.background_color= (0,0,0,.2)
-                on_release:
-                    self.background_color= (0,0,0,.1)
 
-                text: "Humidity:\n\n[size=20sp]%s%%[/size]" % root.cHumidity
+                text: "Humidity:\n\n[size=20sp]%s%%[/size]" % str(root.cHumidity)
                 markup:True
                 text_size: self.size
                 halign: 'right'
@@ -183,18 +211,15 @@ ScreenManager:
 
             Button:
                 background_color: (0,0,0,.1)
-                on_press:
-                    self.background_color= (0,0,0,.2)
-                on_release:
-                    self.background_color= (0,0,0,.1)
 
-                text: "UV Index:\n\n[size=20sp]%s[/size]" % root.cUVIndex
+                text: "UV Index:\n\n[size=20sp]%s[/size]" % str(root.cUVIndex)
                 markup:True
                 text_size: self.size
                 halign: 'right'
                 valign: 'top'
                 padding_x: 20
                 padding_y: 10
+
                 Image:
                     source: "data/uv-index.png"
                     pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
@@ -203,17 +228,15 @@ ScreenManager:
 
             Button:
                 background_color: (0,0,0,.1)
-                on_press:
-                    self.background_color= (0,0,0,.2)
-                on_release:
-                    self.background_color= (0,0,0,.1)
-                text: "Speed:\n\n[size=20sp]%s mph[/size]" % (root.cWindSpeed)
+
+                text: "Wind Speed:\n\n[size=20sp]%s mph[/size]" % str(root.cWindSpeed)
                 markup:True
                 text_size: self.size
                 halign: 'right'
                 valign: 'top'
                 padding_x: 20
                 padding_y: 10
+
                 Image:
                     source: "data/wind.png"
                     pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
@@ -222,17 +245,15 @@ ScreenManager:
 
             Button:
                 background_color: (0,0,0,.1)
-                on_press:
-                    self.background_color= (0,0,0,.2)
-                on_release:
-                    self.background_color= (0,0,0,.1)
-                text: 'Visibility:\n\n[size=20sp]%s[/size]' % root.cVisibility
+
+                text: 'Visibility:\n\n[size=20sp]%s[/size]' % str(root.cVisibility)
                 markup:True
                 text_size: self.size
                 halign: 'right'
                 valign: 'top'
                 padding_x: 20
                 padding_y: 10
+
                 Image:
                     source: "data/visibility.png"
                     pos: self.parent.center_x-(self.width), self.parent.center_y-self.height/2
@@ -241,9 +262,10 @@ ScreenManager:
 
         BoxLayout:
             orientation: 'horizontal'
+            #this is where the 7 day forecast buttons start
 
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime0, root.dTempHi0, root.dTempLo0)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime0), str(root.dTempHi0), str(root.dTempLo0))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -253,16 +275,18 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(0)
                 on_release:
                     self.background_color= (0,0,0,.1)
+
                 Image:
-                    source: "data/%s.png" % root.dIcon0
+                    source: "data/%s.png" % str(root.dIcon0)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
 
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime1, root.dTempHi1, root.dTempLo1)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime1), str(root.dTempHi1), str(root.dTempLo1))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -272,15 +296,17 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(1)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon1
+                    source: "data/%s.png" % str(root.dIcon1)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime2, root.dTempHi2, root.dTempLo2)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime2), str(root.dTempHi2), str(root.dTempLo2))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -290,15 +316,17 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(2)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon2
+                    source: "data/%s.png" % str(root.dIcon2)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime3, root.dTempHi3, root.dTempLo3)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime3), str(root.dTempHi3), str(root.dTempLo3))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -308,15 +336,17 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(3)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon3
+                    source: "data/%s.png" % str(root.dIcon3)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime4, root.dTempHi4, root.dTempLo4)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime4), str(root.dTempHi4), str(root.dTempLo4))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -326,15 +356,17 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(4)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon4
+                    source: "data/%s.png" % str(root.dIcon4)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+
             Button:
-                text:  '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime5, root.dTempHi5, root.dTempLo5)
+                text:  '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime5), str(root.dTempHi5), str(root.dTempLo5))
                 markup:True
                 text_size: self.size
                 outline_color:(1,0,1)
@@ -346,15 +378,17 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(5)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon5
+                    source: "data/%s.png" % str(root.dIcon5)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+
             Button:
-                text: '%s\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (root.dTime6, root.dTempHi6, root.dTempLo6)
+                text: '%s\n\n\n\n\n\n[b][size=20sp]%sºF[/size][/b]\n%sºF' %  (str(root.dTime6), str(root.dTempHi6), str(root.dTempLo6))
                 markup:True
                 text_size: self.size
                 halign: 'center'
@@ -364,10 +398,15 @@ ScreenManager:
                 background_color: (0,0,0,.1)
                 on_press:
                     self.background_color= (0,0,0,.2)
+                    root.switchDay(6)
                 on_release:
                     self.background_color= (0,0,0,.1)
                 Image:
-                    source: "data/%s.png" % root.dIcon6
+                    source: "data/%s.png" % str(root.dIcon6)
                     pos: self.parent.center_x-(self.width/2), self.parent.center_y-(self.height/3)
                     height: self.parent.height-self.parent.height/3
                     width: self.parent.width/2
+<Drop_Down>:
+#drop down is an abstract class 
+
+
